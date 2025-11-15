@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, ops::{Add, Mul}};
+use std::{marker::PhantomData, ops::{Add, Mul, Not}};
 
 pub trait FrameOfReference {
 	fn name() -> &'static str;
@@ -13,6 +13,18 @@ impl<TFromPose, TToPose> Motion<TFromPose, TToPose> where TFromPose: FrameOfRefe
 		Self {
 			_marker: PhantomData,
 		}
+	}
+	pub fn is_null(&self) -> bool {
+		TFromPose::name() == TToPose::name()
+	}
+}
+
+impl<TpFrom, TpTo> Not for &Motion<TpFrom, TpTo> where TpFrom: FrameOfReference, TpTo: FrameOfReference {
+	type Output = Motion<TpTo, TpFrom>;
+
+	fn not(self) -> Self::Output {
+		println!("Inverting motion from {} to {}", TpFrom::name(), TpTo::name());
+		Motion::new()
 	}
 }
 
