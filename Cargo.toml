@@ -1,0 +1,10 @@
+[package]
+name = "transforms"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "transforms_lib"
+path = "src/lib.rs"
+
+[dependencies]
