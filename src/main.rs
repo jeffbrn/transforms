@@ -1,4 +1,4 @@
-use transforms_lib::twod::{FrameOfReference, Motion};
+use transforms_lib::twod::{FrameOfReference, Motion, Position};
 
 struct Cmech {}
 struct Oof {}
@@ -26,7 +26,10 @@ fn main() {
     println!("Hello, world!");
     let m1: Motion<Cmech, Oof> = Motion::new();
     let m2: Motion<Oof, Rso> = Motion::new();
-    let _m3 = m1 + m2;
+    let _m3 = &m1 + &m2;
     let _m4 = Motion::<Cmech, Rso>::new();
-    //let m5 = m1 + m4;
+    //let m5 = m1 + m4; - Incorrect won't compile
+
+    let pos_oof: Position<Oof> = Position::new(1.0, 2.0);
+    let _pos_cmech = &m1 * &pos_oof;
 }
