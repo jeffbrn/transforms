@@ -8,3 +8,4 @@ name = "transforms_lib"
 path = "src/lib.rs"
 
 [dependencies]
+nalgebra = "0.34"
