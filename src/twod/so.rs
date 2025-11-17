@@ -1,4 +1,4 @@
-use nalgebra::Matrix2;
+use nalgebra::{Matrix2, Vector2};
 use std::{
     fmt::Debug,
     ops::{Mul, Not},
@@ -14,6 +14,10 @@ impl SO2 {
         let c = theta.cos();
         let s = theta.sin();
         let m = Matrix2::new(c, -s, s, c);
+        SO2 { m }
+    }
+
+    pub fn from_matrix(m: Matrix2<f64>) -> Self {
         SO2 { m }
     }
 
@@ -44,8 +48,16 @@ impl Debug for SO2 {
 impl Mul for SO2 {
     type Output = SO2;
 
-    fn mul(self, rhs: SO2) -> SO2 {
+    fn mul(self, rhs: SO2) -> Self::Output {
         SO2 { m: self.m * rhs.m }
+    }
+}
+
+impl Mul<Vector2<f64>> for SO2 {
+    type Output = Vector2<f64>;
+
+    fn mul(self, rhs: Vector2<f64>) -> Self::Output {
+        self.m * rhs
     }
 }
 
