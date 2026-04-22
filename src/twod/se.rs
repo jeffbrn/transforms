@@ -4,6 +4,7 @@ use nalgebra::{Matrix3, Vector2, Vector3};
 
 use crate::twod::SO2;
 
+#[derive(PartialEq)]
 pub struct SE2 {
     t: Matrix3<f64>,
 }
@@ -14,6 +15,9 @@ impl SE2 {
         t.fixed_view_mut::<2, 2>(0, 0)
             .copy_from(&rotation.get_matrix());
         t.fixed_view_mut::<2, 1>(0, 2).copy_from(&translation);
+        Self { t }
+    }
+    pub fn new_from_matrix(t: Matrix3<f64>) -> Self {
         Self { t }
     }
 
@@ -30,6 +34,10 @@ impl SE2 {
 
     pub fn get_translation(&self) -> Vector2<f64> {
         Vector2::new(self.t[(0, 2)], self.t[(1, 2)])
+    }
+
+    pub fn is_identity(&self) -> bool {
+        self.t == Matrix3::identity()
     }
 }
 
@@ -51,21 +59,21 @@ impl std::fmt::Debug for SE2 {
     }
 }
 
-fn to_vec3(v: Vector2<f64>) -> Vector3<f64> {
-    Vector3::new(v[0], v[1], 1.0)
-}
+impl Mul<&SE2> for &SE2 {
+    type Output = SE2;
 
-fn to_vec2(v: Vector3<f64>) -> Vector2<f64> {
-    Vector2::new(v[0], v[1])
+    fn mul(self, rhs: &SE2) -> SE2 {
+        SE2 { t: self.t * rhs.t }
+    }
 }
 
 impl Mul<Vector2<f64>> for &SE2 {
     type Output = Vector2<f64>;
 
     fn mul(self, rhs: Vector2<f64>) -> Vector2<f64> {
-        let v3 = to_vec3(rhs);
+        let v3 = Vector3::new(rhs[0], rhs[1], 1.0);
         let v3_result = self.t * v3;
-        to_vec2(v3_result)
+        Vector2::new(v3_result[0], v3_result[1])
     }
 }
 

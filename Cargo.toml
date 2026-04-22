@@ -9,3 +9,6 @@ path = "src/lib.rs"
 
 [dependencies]
 nalgebra = "0.34"
+
+[dev-dependencies]
+approx = "0.5.1"

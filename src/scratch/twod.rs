@@ -1,11 +1,8 @@
+use crate::FrameOfReference;
 use std::{
     marker::PhantomData,
     ops::{Add, Mul, Not},
 };
-
-pub trait FrameOfReference {
-    fn name() -> &'static str;
-}
 
 pub struct Motion<TFromPose, TToPose>
 where
@@ -13,6 +10,18 @@ where
     TToPose: FrameOfReference,
 {
     _marker: PhantomData<(TFromPose, TToPose)>,
+}
+
+impl<TFromPose, TToPose> Default for Motion<TFromPose, TToPose>
+where
+    TFromPose: FrameOfReference,
+    TToPose: FrameOfReference,
+{
+    fn default() -> Self {
+        Self {
+            _marker: PhantomData,
+        }
+    }
 }
 
 impl<TFromPose, TToPose> Motion<TFromPose, TToPose>
